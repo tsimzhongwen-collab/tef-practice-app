@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
 <title>TEF 听力机经 · 在线语音增强版</title>
 <style>
 :root{
@@ -24,6 +25,29 @@ main{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;max-width:1
 .kwCn{color:var(--muted);font-size:12px}
 .kwHint{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}
 
+@media (prefers-color-scheme: dark){
+  :root{
+    --blue:#7db7ff;--blue2:#132235;--bg:#0b0f16;--card:#111827;--line:#2b3442;
+    --text:#e5e7eb;--muted:#9ca3af;--ok:#48d597;--bad:#ff8a80;--warn:#fbbf24;
+  }
+  body{background:var(--bg);color:var(--text)}
+  header,.nav,.panel,.kwCard{background:var(--card);border-color:var(--line)}
+  .meta{color:#cbd5e1}.pill{background:#0f172a;border-color:var(--line);color:#cbd5e1}
+  .nav h3{color:#f3f4f6}.nav button,.controls button,.plainBtn,select,.option,.person,.kwBtn{background:#0f172a;border-color:var(--line);color:var(--text)}
+  .nav button.active{background:#132235;border-color:var(--blue);color:var(--blue)}
+  .nav button.ok,.option.correct,.person.correct{background:#09291b;border-color:#166534}
+  .nav button.bad,.option.wrong,.person.wrong{background:#2a1416;border-color:#7f1d1d}
+  .right{background:#0f172a}.left{border-right-color:var(--line)}
+  .qhead,.footer{border-color:var(--line)}
+  .tag{background:#132235;color:#9ccaff}
+  .audioBox{background:#0f172a;border-color:var(--line)}
+  .bar{background:#1f2937}.fill{background:#7db7ff}
+  .plainBtn:hover,.controls button:hover,.kwBtn:hover{background:#182235}
+  .script{border-top-color:var(--line)}.cn,.optionCn,.kwIntro,.kwCn{color:#cbd5e1}
+  .srcNote{background:#2a1d0c;border-color:#92400e;color:#fcd9a2}
+  .kbd{background:#0f172a;border-color:#344054;color:#d1d5db}
+  .summary th,.summary td{border-bottom-color:var(--line)}
+}
 @media(max-width:900px){main{grid-template-columns:1fr}.nav{position:static;height:auto}.content{grid-template-columns:1fr}.left{border-right:0;border-bottom:1px solid var(--line)}.qhead{align-items:flex-start;flex-direction:column}.meta{display:none}}
 </style>
 </head>
@@ -39,7 +63,7 @@ main{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;max-width:1
   <div class="group">原 45–54</div><div class="navGrid" id="navOld"></div>
   <button class="wide" onclick="showKeywords()">图片题关键词</button>
   <button class="wide" onclick="showSummary()">查看汇总</button>
-  <p class="hint">音频使用在线法语 TTS。电脑有网络时会优先播放在线语音；失败时才回退到浏览器本地语音。</p>
+  <p class="hint">音频使用在线法语 TTS。部署后通过本站接口播放，减少浏览器拦截。</p>
 </aside>
 <section class="panel">
   <div id="quiz"></div>
@@ -145,7 +169,7 @@ const IMAGE_KEYWORDS = [
   ]}
 ];
 
-let idx=0, answers={}, checked={}, started=Date.now(), currentAudio=null, audioQueue=[], queueIndex=0, paused=false, tick=null, showTranslation=false, playSession=0;
+let idx=0, answers={}, checked={}, started=Date.now(), currentAudio=null, audioQueue=[], queueIndex=0, paused=false, tick=null, showTranslation=false, playSession=0, usingDirectTTS=false;
 const $=id=>document.getElementById(id);
 setInterval(()=>{const s=Math.floor((Date.now()-started)/1000); $('timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},1000);
 function splitForOnlineTTS(text){
@@ -166,6 +190,9 @@ function splitForOnlineTTS(text){
   return parts;
 }
 function onlineTTSUrl(text){
+  return '/api/tts?q='+encodeURIComponent(text);
+}
+function directTTSUrl(text){
   return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=fr&q='+encodeURIComponent(text);
 }
 function stopAudio(){
@@ -177,9 +204,14 @@ function stopAudio(){
 function playCurrent(session=playSession){
   if(session!==playSession) return;
   if(queueIndex>=audioQueue.length){ const f=$('fill'); if(f) f.style.width='100%'; return; }
-  currentAudio=new Audio(onlineTTSUrl(audioQueue[queueIndex]));
+  const text=audioQueue[queueIndex];
+  currentAudio=new Audio(usingDirectTTS ? directTTSUrl(text) : onlineTTSUrl(text));
   currentAudio.onended=()=>{ if(session!==playSession) return; queueIndex++; playCurrent(session); };
-  currentAudio.onerror=()=>{ if(session!==playSession) return; queueIndex++; playCurrent(session); };
+  currentAudio.onerror=()=>{
+    if(session!==playSession) return;
+    if(!usingDirectTTS){ usingDirectTTS=true; playCurrent(session); return; }
+    queueIndex++; playCurrent(session);
+  };
   currentAudio.onplay=()=>{
     if(session!==playSession) return;
     clearInterval(tick);
@@ -196,6 +228,7 @@ function playCurrent(session=playSession){
 function playAudio(){
   stopAudio();
   playSession++;
+  usingDirectTTS=false;
   audioQueue=splitForOnlineTTS(QUESTIONS[idx].audio);
   queueIndex=0;
   playCurrent(playSession);
@@ -232,13 +265,11 @@ function prev(){if(idx>0){idx--;render();}}
 
 function speakKeyword(text){
   stopAudio();
+  usingDirectTTS=false;
   currentAudio=new Audio(onlineTTSUrl(text));
   currentAudio.onerror=()=>{ 
-    if('speechSynthesis' in window){
-      const u=new SpeechSynthesisUtterance(text);
-      u.lang='fr-FR'; u.rate=.9;
-      speechSynthesis.cancel(); speechSynthesis.speak(u);
-    }
+    currentAudio=new Audio(directTTSUrl(text));
+    currentAudio.play().catch(()=>{});
   };
   currentAudio.play().catch(()=>{});
 }
