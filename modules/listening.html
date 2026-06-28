@@ -107,7 +107,7 @@ Troisième personne. Il est évident que cela coûterait trop cher, mais pour ce
 {no:53,group:'old',type:'choice',title:'电影院广播',tag:'公共广播 / 单选',q:'Ce message est diffusé dans…',audio:`Mesdames, Messieurs, bonsoir. Votre film va commencer dans quelques minutes. Installez-vous confortablement et n'oubliez pas d'éteindre vos téléphones portables. Bonne séance !`,cn:`女士们先生们，晚上好。您的电影将在几分钟后开始。请舒适入座，并不要忘记关闭手机。祝观影愉快！`,opts:[['A','une gare','火车站'],['B','un cinéma','电影院'],['C','un théâtre','剧院'],['D','un musée','博物馆']],ans:'B'},
 {no:54,group:'old',type:'choice',title:'火车站广播',tag:'公共广播 / 单选',q:'Ce message est diffusé pour…',audio:`Mesdames et Messieurs, le quart à destination de Lausanne prévu à seize heures quatorze va être retardé à cause d'un incident mécanique. Nous allons mettre à votre disposition un nouveau moyen de transport. Veuillez rester attentifs aux annonces. Merci pour votre compréhension.`,cn:`女士们先生们，前往洛桑、原定 16 点 14 分的 Le Quart 将因机械事故而延迟。我们将为您提供一种新的交通工具。请注意公告。感谢您的理解。`,opts:[['A','donner un nouvel horaire','给出新的时间'],['B','modifier une information','修改一条信息'],['C','expliquer une situation','解释一种情况'],['D','annoncer un départ','宣布出发']],ans:'C'}
 ];
-let idx=0, answers={}, checked={}, started=Date.now(), currentAudio=null, audioQueue=[], queueIndex=0, paused=false, tick=null, showTranslation=false, usingSpeech=false, currentUtterance=null;
+let idx=0, answers={}, checked={}, started=Date.now(), currentAudio=null, audioQueue=[], queueIndex=0, paused=false, tick=null, showTranslation=false, playSession=0;
 const $=id=>document.getElementById(id);
 setInterval(()=>{const s=Math.floor((Date.now()-started)/1000); $('timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},1000);
 function splitForOnlineTTS(text){
@@ -131,43 +131,19 @@ function onlineTTSUrl(text){
   return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=fr&q='+encodeURIComponent(text);
 }
 function stopAudio(){
+  playSession++;
   if(currentAudio){ currentAudio.pause(); currentAudio.src=''; currentAudio=null; }
-  if('speechSynthesis' in window){ speechSynthesis.cancel(); }
-  audioQueue=[]; queueIndex=0; paused=false; usingSpeech=false; currentUtterance=null; clearInterval(tick);
+  audioQueue=[]; queueIndex=0; paused=false; clearInterval(tick);
   const f=$('fill'); if(f) f.style.width='0%';
 }
-function pickFrenchVoice(){
-  if(!('speechSynthesis' in window)) return null;
-  const voices=speechSynthesis.getVoices();
-  return voices.find(v=>/^fr[-_]/i.test(v.lang)&&/Google|Microsoft|Thomas|Amelie|Amélie|Daniel/i.test(v.name))
-    || voices.find(v=>/^fr[-_]/i.test(v.lang))
-    || null;
-}
-function playBrowserTTS(){
-  if(!('speechSynthesis' in window)){ const f=$('fill'); if(f) f.style.width='100%'; return; }
-  usingSpeech=true;
-  speechSynthesis.cancel();
-  queueIndex=0;
-  const voice=pickFrenchVoice();
-  const playPart=()=>{
-    if(queueIndex>=audioQueue.length){ const f=$('fill'); if(f) f.style.width='100%'; return; }
-    const f=$('fill'); if(f) f.style.width=Math.round(queueIndex/audioQueue.length*100)+'%';
-    currentUtterance=new SpeechSynthesisUtterance(audioQueue[queueIndex]);
-    currentUtterance.lang='fr-FR';
-    currentUtterance.rate=0.9;
-    if(voice) currentUtterance.voice=voice;
-    currentUtterance.onend=()=>{ queueIndex++; playPart(); };
-    currentUtterance.onerror=()=>{ queueIndex++; playPart(); };
-    speechSynthesis.speak(currentUtterance);
-  };
-  playPart();
-}
-function playCurrent(){
+function playCurrent(session=playSession){
+  if(session!==playSession) return;
   if(queueIndex>=audioQueue.length){ const f=$('fill'); if(f) f.style.width='100%'; return; }
   currentAudio=new Audio(onlineTTSUrl(audioQueue[queueIndex]));
-  currentAudio.onended=()=>{ queueIndex++; playCurrent(); };
-  currentAudio.onerror=()=>{ playBrowserTTS(); };
+  currentAudio.onended=()=>{ if(session!==playSession) return; queueIndex++; playCurrent(session); };
+  currentAudio.onerror=()=>{ if(session!==playSession) return; queueIndex++; playCurrent(session); };
   currentAudio.onplay=()=>{
+    if(session!==playSession) return;
     clearInterval(tick);
     const base=queueIndex/audioQueue.length*100;
     tick=setInterval(()=>{
@@ -177,16 +153,17 @@ function playCurrent(){
       }
     },200);
   };
-  currentAudio.play().catch(()=>playBrowserTTS());
+  currentAudio.play().catch(()=>{ if(session===playSession){ queueIndex++; playCurrent(session); } });
 }
 function playAudio(){
   stopAudio();
+  playSession++;
   audioQueue=splitForOnlineTTS(QUESTIONS[idx].audio);
   queueIndex=0;
-  playCurrent();
+  playCurrent(playSession);
 }
-function pauseAudio(){ if(currentAudio){ currentAudio.pause(); paused=true; } if(usingSpeech&&'speechSynthesis' in window){ speechSynthesis.pause(); paused=true; } }
-function resumeAudio(){ if(currentAudio && paused){ currentAudio.play(); paused=false; } if(usingSpeech&&paused&&'speechSynthesis' in window){ speechSynthesis.resume(); paused=false; } }
+function pauseAudio(){ if(currentAudio){ currentAudio.pause(); paused=true; } }
+function resumeAudio(){ if(currentAudio && paused){ currentAudio.play(); paused=false; } }
 function renderNav(){
   const make=(g)=>QUESTIONS.map((q,i)=>q.group===g?`<button class="${i===idx?'active ':''}${checked[q.no]||''}" onclick="go(${i})">${q.no}</button>`:'').join('');
   $('navNew').innerHTML=make('new'); $('navOld').innerHTML=make('old');
@@ -202,7 +179,7 @@ function render(){
   }
   const note=q.note?`<div class="srcNote">${q.note}</div>`:'';
   const fb=checked[q.no]?`<div class="feedback ${checked[q.no]==='ok'?'good':'badText'}">${checked[q.no]==='ok'?'正确。':'错误。正确答案：'+rightAnswer(q)}</div>`:'';
-  $('quiz').innerHTML=`<div class="qhead"><div class="qtitle">${q.no}. ${q.title}</div><div class="tag">${q.tag}</div></div><div class="content"><div class="left"><div class="audioBox"><div class="audioTitle"><b>Document sonore</b><span class="muted">在线法语自然语音</span></div><div class="bar"><div class="fill" id="fill"></div></div><div class="controls"><button onclick="playAudio()">▶ 播放</button><button onclick="pauseAudio()">暂停</button><button onclick="resumeAudio()">继续</button><button onclick="stopAudio()">停止</button></div><div class="voiceLine"><span class="hint">优先在线语音，失败时自动使用浏览器本机法语朗读</span></div></div><button class="plainBtn" style="margin-top:16px" onclick="toggleScript()">显示/隐藏听力文本和中文翻译</button>${note}<div class="script ${showTranslation?'show':''}" id="scriptBox"><h4>Texte intégral</h4><div class="fr">${q.audio}</div><h4>中文逐句翻译</h4><div class="cn">${q.cn}</div></div></div><div class="right"><div class="question">${q.q}</div>${body}${fb}</div></div><div class="footer"><div><button class="plainBtn" onclick="prev()">上一题</button><button class="plainBtn" onclick="retry()">重做本题</button></div><div><button class="mainbtn" onclick="check()">确认本题</button><button class="plainBtn" onclick="next()">下一题</button></div></div>`;
+  $('quiz').innerHTML=`<div class="qhead"><div class="qtitle">${q.no}. ${q.title}</div><div class="tag">${q.tag}</div></div><div class="content"><div class="left"><div class="audioBox"><div class="audioTitle"><b>Document sonore</b><span class="muted">在线法语自然语音</span></div><div class="bar"><div class="fill" id="fill"></div></div><div class="controls"><button onclick="playAudio()">▶ 播放</button><button onclick="pauseAudio()">暂停</button><button onclick="resumeAudio()">继续</button><button onclick="stopAudio()">停止</button></div><div class="voiceLine"><span class="hint">在线法语自然语音 · 再次播放会先停止上一段</span></div></div><button class="plainBtn" style="margin-top:16px" onclick="toggleScript()">显示/隐藏听力文本和中文翻译</button>${note}<div class="script ${showTranslation?'show':''}" id="scriptBox"><h4>Texte intégral</h4><div class="fr">${q.audio}</div><h4>中文逐句翻译</h4><div class="cn">${q.cn}</div></div></div><div class="right"><div class="question">${q.q}</div>${body}${fb}</div></div><div class="footer"><div><button class="plainBtn" onclick="prev()">上一题</button><button class="plainBtn" onclick="retry()">重做本题</button></div><div><button class="mainbtn" onclick="check()">确认本题</button><button class="plainBtn" onclick="next()">下一题</button></div></div>`;
   renderNav();
 }
 function rightAnswer(q){ if(q.type==='choice'){const o=q.opts.find(x=>x[0]===q.ans); return `${q.ans}. ${o?o[1]:''}`;} return q.ans.map((a,i)=>`${q.labels[i]}：${q.choices.find(c=>c[0]===a)?.[1]||a}`).join('；'); }
