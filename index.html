@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TEF互动刷题系统 · 登录</title>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<style>
+:root{--bg:#eef2f7;--card:#fff;--text:#111827;--muted:#667085;--line:#d0d5dd;--blue:#175cd3;--blue2:#eff8ff;--red:#b42318;--green:#067647}
+*{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 10%,#e0f2fe,transparent 36%),var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;color:var(--text);display:grid;place-items:center;padding:20px}.login{width:min(460px,100%);background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 60px rgba(16,24,40,.14);padding:30px}.brand{font-size:25px;font-weight:850;line-height:1.25;margin-bottom:8px}.sub{color:var(--muted);line-height:1.6;margin-bottom:24px}.field{margin:14px 0}.field label{display:block;font-size:14px;color:#344054;font-weight:700;margin-bottom:7px}.field input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;background:#fff}.field input:focus{outline:2px solid #bfdbfe;border-color:var(--blue)}button{width:100%;border:0;border-radius:12px;padding:13px 16px;background:var(--blue);color:#fff;font-weight:800;font-size:16px;cursor:pointer;margin-top:10px}.hint{font-size:13px;color:var(--muted);line-height:1.65;margin-top:18px;background:#f8fafc;border:1px solid #e4e7ec;border-radius:12px;padding:12px}.err{display:none;margin-top:14px;color:var(--red);background:#fff1f0;border:1px solid #fecdca;border-radius:12px;padding:12px;line-height:1.55}.loadingMask{display:none;position:fixed;inset:0;background:rgba(238,242,247,.82);backdrop-filter:blur(8px);z-index:50;place-items:center}.loadingBox{width:min(360px,calc(100vw - 44px));background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 60px rgba(16,24,40,.18);padding:28px;text-align:center}.spinner{width:38px;height:38px;border-radius:999px;border:4px solid #dbeafe;border-top-color:var(--blue);margin:0 auto 14px;animation:spin .8s linear infinite}.loadingTitle{font-size:20px;font-weight:850}.loadingSub{margin-top:8px;color:var(--muted);font-size:14px}@keyframes spin{to{transform:rotate(360deg)}}.ok{color:var(--green)} code{background:#eef2ff;border:1px solid #dbeafe;padding:1px 5px;border-radius:5px}@media(prefers-color-scheme:dark){:root{--bg:#0b0f16;--card:#111827;--text:#e5e7eb;--muted:#9ca3af;--line:#2b3442;--blue:#7db7ff;--blue2:#132235}.login{background:rgba(17,24,39,.92)}.field label{color:#cbd5e1}.field input{background:#0f172a;color:#e5e7eb}.hint{background:#0f172a;border-color:#2b3442}.err{background:#2a1416;border-color:#7f1d1d}.loadingMask{background:rgba(11,15,22,.82)}.loadingBox{background:#111827}}
+</style>
+</head>
+<body>
+  <main class="login">
+    <div class="brand">TEF互动刷题系统</div>
+    <div class="sub">一人一号，分享封号，概不退款。</div>
+    <form id="form">
+      <div class="field"><label for="username">账号邮箱</label><input id="username" autocomplete="username" placeholder="buyer@example.com" /></div>
+      <div class="field"><label for="password">密码</label><input id="password" type="password" autocomplete="current-password" placeholder="请输入密码" /></div>
+      <button type="submit" id="loginBtn">登录进入刷题系统</button>
+    </form>
+    <div class="err" id="msg"></div>
+  </main>
+  <div class="loadingMask" id="loadingMask">
+    <div class="loadingBox">
+      <div class="spinner"></div>
+      <div class="loadingTitle">加载中，请稍等...</div>
+      <div class="loadingSub">正在验证账号、到期时间与设备绑定</div>
+    </div>
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/auth.js"></script>
+<script>
+const form = document.getElementById('form');
+const msg = document.getElementById('msg');
+const loginBtn = document.getElementById('loginBtn');
+const loadingMask = document.getElementById('loadingMask');
+// 不再自动跳转：即使浏览器里已有登录态，也需要用户点击“登录”进入，避免误以为没有输入密码就跳转。
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  msg.style.display = 'none';
+  loginBtn.disabled = true;
+  loginBtn.textContent = '登录中...';
+  try {
+    const res = await TEF_AUTH.login(document.getElementById('username').value, document.getElementById('password').value);
+    if(!res.ok){ msg.textContent = res.reason; msg.style.display = 'block'; return; }
+    loadingMask.style.display = 'grid';
+    setTimeout(()=>{ location.href = 'app.html'; }, 900);
+  } catch(err) {
+    msg.textContent = err.message || String(err);
+    msg.style.display = 'block';
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = '登录进入刷题系统';
+  }
+});
+</script>
+</body>
+</html>

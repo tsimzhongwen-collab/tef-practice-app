@@ -1,0 +1,10 @@
+{
+  "name": "tef-tcf-practice-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/write-supabase-config.mjs",
+    "start": "python3 -m http.server 4173"
+  }
+}
