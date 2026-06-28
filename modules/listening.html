@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="color-scheme" content="light dark" />
 <title>TEF 听力机经 · 在线语音增强版</title>
 <style>
 :root{
@@ -13,29 +12,18 @@
 *{box-sizing:border-box}html,body{margin:0}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text)}
 header{height:62px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:20}.brand{font-weight:800;letter-spacing:.2px}.meta{display:flex;gap:14px;align-items:center;color:#344054;font-size:14px}.pill{background:#f2f4f7;border:1px solid #e4e7ec;border-radius:999px;padding:6px 10px}
 main{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;max-width:1260px;margin:18px auto;padding:0 14px}.nav{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;position:sticky;top:80px;height:calc(100vh - 98px);overflow:auto}.nav h3{font-size:14px;margin:0 0 10px;color:#344054}.group{font-size:12px;color:var(--muted);margin:12px 4px 6px}.navGrid{display:flex;flex-wrap:wrap}.nav button{min-width:44px;width:auto;height:38px;margin:4px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}.nav button.active{background:#dbeafe;border-color:var(--blue);color:var(--blue);font-weight:800}.nav button.ok{border-color:#6cc58b;background:#ecfdf3}.nav button.bad{border-color:#fda29b;background:#fff1f2}.nav .wide{width:calc(100% - 8px);margin-top:12px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;min-height:680px}.qhead{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}.qtitle{font-size:21px;font-weight:800}.tag{font-size:13px;background:#eef2ff;color:#3538cd;padding:6px 12px;border-radius:999px;white-space:nowrap}.content{display:grid;grid-template-columns:minmax(0,1fr) 410px}.left{padding:24px;border-right:1px solid var(--line)}.right{padding:24px;background:#fbfcff}.audioBox{border:1px solid var(--line);border-radius:14px;background:#f8fafc;padding:18px}.audioTitle{display:flex;justify-content:space-between;gap:12px;align-items:center}.bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:16px 0}.fill{height:100%;width:0;background:#98a2b3;transition:width .2s}.controls{display:flex;flex-wrap:wrap;gap:8px}.controls button,.plainBtn,.mainbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px}.mainbtn{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:800}.plainBtn:hover,.controls button:hover{background:#f2f4f7}.voiceLine{margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.voiceLine select{width:auto;min-width:190px}.hint{font-size:12px;color:var(--muted);line-height:1.55}.script{display:none;margin-top:18px;border-top:1px dashed var(--line);padding-top:16px}.script.show{display:block}.script h4{margin:10px 0 6px}.fr{font-size:18px;line-height:1.9;white-space:pre-wrap}.cn{color:#4b5563;line-height:1.85;white-space:pre-wrap;margin-top:12px}.question{font-weight:800;margin:0 0 18px;line-height:1.65}.option{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fff;cursor:pointer;line-height:1.45}.option input{margin-top:3px}.option.selected{border-color:var(--blue);background:var(--blue2)}.option.correct{border-color:var(--ok);background:#ecfdf3}.option.wrong{border-color:var(--bad);background:#fff1f2}.feedback{margin-top:14px;font-weight:800;line-height:1.6}.good{color:var(--ok)}.badText{color:var(--bad)}.warn{color:var(--warn)}select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:white;margin-top:8px}.matrix{display:grid;gap:14px}.person{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fff}.person.correct{border-color:var(--ok);background:#ecfdf3}.person.wrong{border-color:var(--bad);background:#fff1f2}.footer{padding:18px 22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}.summary{display:none;padding:28px}.summary.show{display:block}.summary table{width:100%;border-collapse:collapse;margin-top:16px}.summary th,.summary td{border-bottom:1px solid var(--line);text-align:left;padding:10px}.muted{color:var(--muted);font-size:13px}.optionCn{display:none;color:var(--muted);font-size:13px;margin-top:4px}.optionCn.show{display:block}.srcNote{margin-top:12px;padding:10px 12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;color:#9a3412;font-size:13px;line-height:1.6}.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f2f4f7;border:1px solid #e4e7ec;border-radius:5px;padding:1px 5px}
-@media (prefers-color-scheme: dark){
-  :root{
-    --blue:#7db7ff;--blue2:#132235;--bg:#0b0f16;--card:#111827;--line:#2b3442;
-    --text:#e5e7eb;--muted:#9ca3af;--ok:#48d597;--bad:#ff8a80;--warn:#fbbf24;
-  }
-  body{background:var(--bg);color:var(--text)}
-  header,.nav,.panel{background:var(--card);border-color:var(--line)}
-  .meta{color:#cbd5e1}.pill{background:#0f172a;border-color:var(--line);color:#cbd5e1}
-  .nav h3{color:#f3f4f6}.nav button,.controls button,.plainBtn,select,.option,.person{background:#0f172a;border-color:var(--line);color:var(--text)}
-  .nav button.active{background:#132235;border-color:var(--blue);color:var(--blue)}
-  .nav button.ok,.option.correct,.person.correct{background:#09291b;border-color:#166534}
-  .nav button.bad,.option.wrong,.person.wrong{background:#2a1416;border-color:#7f1d1d}
-  .right{background:#0f172a}.left{border-right-color:var(--line)}
-  .qhead,.footer{border-color:var(--line)}
-  .tag{background:#132235;color:#9ccaff}
-  .audioBox{background:#0f172a;border-color:var(--line)}
-  .bar{background:#1f2937}.fill{background:#7db7ff}
-  .plainBtn:hover,.controls button:hover{background:#182235}
-  .script{border-top-color:var(--line)}.cn,.optionCn{color:#cbd5e1}
-  .srcNote{background:#2a1d0c;border-color:#92400e;color:#fcd9a2}
-  .kbd{background:#0f172a;border-color:#344054;color:#d1d5db}
-  .summary th,.summary td{border-bottom-color:var(--line)}
-}
+.kwIntro{font-size:14px;color:#4b5563;line-height:1.75;margin:0 0 18px}
+.kwTools{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+.kwGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.kwCard{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}
+.kwCard h3{margin:0 0 10px;font-size:17px}
+.kwList{display:flex;flex-wrap:wrap;gap:8px}
+.kwBtn{border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:8px 10px;cursor:pointer;font-size:14px;display:inline-flex;gap:6px;align-items:center}
+.kwBtn:hover{background:#eef2ff;border-color:#c7d7fe}
+.kwFr{font-weight:800}
+.kwCn{color:var(--muted);font-size:12px}
+.kwHint{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}
+
 @media(max-width:900px){main{grid-template-columns:1fr}.nav{position:static;height:auto}.content{grid-template-columns:1fr}.left{border-right:0;border-bottom:1px solid var(--line)}.qhead{align-items:flex-start;flex-direction:column}.meta{display:none}}
 </style>
 </head>
@@ -49,6 +37,7 @@ main{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;max-width:1
   <h3>题号导航</h3>
   <div class="group">新增题</div><div class="navGrid" id="navNew"></div>
   <div class="group">原 45–54</div><div class="navGrid" id="navOld"></div>
+  <button class="wide" onclick="showKeywords()">图片题关键词</button>
   <button class="wide" onclick="showSummary()">查看汇总</button>
   <p class="hint">音频使用在线法语 TTS。电脑有网络时会优先播放在线语音；失败时才回退到浏览器本地语音。</p>
 </aside>
@@ -107,6 +96,55 @@ Troisième personne. Il est évident que cela coûterait trop cher, mais pour ce
 {no:53,group:'old',type:'choice',title:'电影院广播',tag:'公共广播 / 单选',q:'Ce message est diffusé dans…',audio:`Mesdames, Messieurs, bonsoir. Votre film va commencer dans quelques minutes. Installez-vous confortablement et n'oubliez pas d'éteindre vos téléphones portables. Bonne séance !`,cn:`女士们先生们，晚上好。您的电影将在几分钟后开始。请舒适入座，并不要忘记关闭手机。祝观影愉快！`,opts:[['A','une gare','火车站'],['B','un cinéma','电影院'],['C','un théâtre','剧院'],['D','un musée','博物馆']],ans:'B'},
 {no:54,group:'old',type:'choice',title:'火车站广播',tag:'公共广播 / 单选',q:'Ce message est diffusé pour…',audio:`Mesdames et Messieurs, le quart à destination de Lausanne prévu à seize heures quatorze va être retardé à cause d'un incident mécanique. Nous allons mettre à votre disposition un nouveau moyen de transport. Veuillez rester attentifs aux annonces. Merci pour votre compréhension.`,cn:`女士们先生们，前往洛桑、原定 16 点 14 分的 Le Quart 将因机械事故而延迟。我们将为您提供一种新的交通工具。请注意公告。感谢您的理解。`,opts:[['A','donner un nouvel horaire','给出新的时间'],['B','modifier une information','修改一条信息'],['C','expliquer une situation','解释一种情况'],['D','annoncer un départ','宣布出发']],ans:'C'}
 ];
+
+const IMAGE_KEYWORDS = [
+  {title:'1 周末活动 / 地点', items:[
+    ['la piscine','游泳池'],['nager','游泳'],['faire de la natation','游泳'],['la bibliothèque','图书馆'],['joindre quelqu’un','联系某人'],['éteindre son téléphone','关掉手机']
+  ]},
+  {title:'2 婴儿用品 / 衣服', items:[
+    ['une peluche','毛绒玩具'],['un pyjama','睡衣'],['un mouton','羊'],['le soleil','太阳'],['une poussette','婴儿车'],['une grenouillère','婴儿连体衣']
+  ]},
+  {title:'3 交通工具', items:[
+    ['un bus','公交车 / 大巴'],['un camping-car','房车'],['une voiture','汽车'],['un vélo','自行车'],['une bicyclette','自行车'],['une petite voiture','小汽车']
+  ]},
+  {title:'4 房子 / 居住环境', items:[
+    ['une maison','房子'],['un grand jardin','大花园'],['un hôtel','酒店'],['une piscine','游泳池'],['une villa','别墅'],['un immeuble','楼房'],['la campagne','乡村']
+  ]},
+  {title:'5 房间场景 / 搬家装修', items:[
+    ['déménager','搬家'],['un déménagement','搬家'],['les travaux','装修 / 工程'],['un ouvrier','工人'],['une salle de classe','教室'],['prendre le bus','坐公交']
+  ]},
+  {title:'6 外貌描述', items:[
+    ['brune','黑发女性'],['blonde','金发女性'],['les cheveux courts','短发'],['les cheveux longs','长发'],['les cheveux bouclés','卷发'],['les lunettes','眼镜']
+  ]},
+  {title:'7 物品位置', items:[
+    ['un livre','书'],['un billet d’avion','飞机票'],['une bouteille','瓶子'],['une montre','手表'],['un sac','包'],['un ticket','票']
+  ]},
+  {title:'8 物品识别', items:[
+    ['une jupe','裙子'],['une voiture','汽车'],['un parfum','香水'],['un flacon de parfum','香水瓶'],['un ordinateur','电脑']
+  ]},
+  {title:'9 礼物 / 茶具', items:[
+    ['un service à thé','一套茶具'],['une théière','茶壶'],['une tasse','杯子'],['un verre','玻璃杯'],['un cadeau','礼物'],['danser','跳舞']
+  ]},
+  {title:'18 运动 / 户外活动', items:[
+    ['faire du cheval','骑马'],['un cheval','马'],['un bateau','船'],['un voilier','帆船'],['faire du ski','滑雪'],['un deltaplane','滑翔翼']
+  ]},
+  {title:'19 自然场景', items:[
+    ['la forêt','森林'],['la fraîcheur de la forêt','森林的清凉'],['l’hiver','冬天'],['skier','滑雪'],['un chameau','骆驼'],['le désert','沙漠']
+  ]},
+  {title:'20 / 27 会议场景', items:[
+    ['une salle de réunion','会议室'],['faire un rapport','作报告'],['un rapport','报告'],['un dossier','文件'],['fumer','抽烟'],['boire un café','喝咖啡'],['être face à face','面对面']
+  ]},
+  {title:'22 食物图片', items:[
+    ['un gâteau aux fraises','草莓蛋糕'],['une salade','沙拉'],['des spaghettis','意大利面'],['des pâtes','意面'],['un poisson','鱼'],['une assiette','盘子']
+  ]},
+  {title:'29 车祸图片', items:[
+    ['un accident','事故'],['être blessé','受伤'],['une voiture','汽车'],['un vélo','自行车'],['réparer une voiture','修汽车'],['un embouteillage','堵车'],['appeler les secours','叫救援']
+  ]},
+  {title:'44 睡衣图 / 儿童用品', items:[
+    ['l’armoire','衣柜'],['un pyjama','睡衣'],['les petits moutons','小羊图案'],['le soleil','太阳图案'],['une poussette','婴儿车'],['une peluche','毛绒玩具']
+  ]}
+];
+
 let idx=0, answers={}, checked={}, started=Date.now(), currentAudio=null, audioQueue=[], queueIndex=0, paused=false, tick=null, showTranslation=false, playSession=0;
 const $=id=>document.getElementById(id);
 setInterval(()=>{const s=Math.floor((Date.now()-started)/1000); $('timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},1000);
@@ -191,6 +229,54 @@ function retry(){delete answers[QUESTIONS[idx].no]; delete checked[QUESTIONS[idx
 function go(i){idx=i;render();}
 function next(){if(idx<QUESTIONS.length-1){idx++;render();}else showSummary();}
 function prev(){if(idx>0){idx--;render();}}
+
+function speakKeyword(text){
+  stopAudio();
+  currentAudio=new Audio(onlineTTSUrl(text));
+  currentAudio.onerror=()=>{ 
+    if('speechSynthesis' in window){
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang='fr-FR'; u.rate=.9;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    }
+  };
+  currentAudio.play().catch(()=>{});
+}
+function speakGroup(i){
+  const group=IMAGE_KEYWORDS[i];
+  if(!group) return;
+  const text=group.items.map(x=>x[0]).join('. ');
+  stopAudio();
+  audioQueue=splitForOnlineTTS(text);
+  queueIndex=0;
+  playSession++;
+  playCurrent(playSession);
+}
+function showKeywords(){
+  stopAudio();
+  $('summary').classList.remove('show');
+  renderNav();
+  const cards=IMAGE_KEYWORDS.map((g,i)=>`
+    <div class="kwCard">
+      <h3>${g.title}</h3>
+      <div class="kwList">
+        ${g.items.map(k=>`<button class="kwBtn" onclick="speakKeyword('${k[0].replace(/'/g,"\\'")}')"><span>▶</span><span><span class="kwFr">${k[0]}</span><br><span class="kwCn">${k[1]}</span></span></button>`).join('')}
+      </div>
+      <div class="kwHint"><button class="plainBtn" onclick="speakGroup(${i})">播放本组关键词</button></div>
+    </div>
+  `).join('');
+  $('quiz').innerHTML=`
+    <div class="qhead"><div class="qtitle">图片题关键词训练</div><div class="tag">点击可听发音</div></div>
+    <div class="left" style="border-right:0">
+      <p class="kwIntro">这里提取的是上传的《TEF听力机经(2).pdf》图片题中反复出现、容易决定答案的词。点击单个词可以听法语发音；点击“播放本组关键词”可以连续听一组。中文只用于确认含义，不参与题目作答。</p>
+      <div class="kwTools">
+        <button class="mainbtn" onclick="speakKeyword('la piscine. un pyjama. un vélo. une maison. déménager. les lunettes. un billet d’avion. un service à thé. un accident. une salle de réunion.')">播放高频总复习</button>
+        <button class="plainBtn" onclick="idx=0;render()">回到刷题</button>
+      </div>
+      <div class="kwGrid">${cards}</div>
+    </div>`;
+}
+
 function showSummary(){
   stopAudio(); $('quiz').innerHTML=''; $('summary').classList.add('show'); renderNav();
   const ok=QUESTIONS.filter(q=>checked[q.no]==='ok').length;
