@@ -74,7 +74,7 @@ function render(){
 function openDrop(e){
   closeDrop(); const b=e.currentTarget; const qn=Number(b.dataset.q); const item=DATA[idx];
   dropdown=document.createElement('div'); dropdown.className='dropdown';
-  dropdown.innerHTML=item.questions[qn].options.map((o,i)=>`<div class="choice" data-val="${esc(o)}"><div class="choice-fr">${esc(o)}</div><div class="choice-cn">${esc(item.questions[qn].optionTranslations?.[i]||'')}</div></div>`).join('');
+  dropdown.innerHTML=item.questions[qn].options.map((o,i)=>{ const cn=translationVisible?`<div class="choice-cn">${esc(item.questions[qn].optionTranslations?.[i]||'')}</div>`:''; return `<div class="choice" data-val="${esc(o)}"><div class="choice-fr">${esc(o)}</div>${cn}</div>`; }).join('');
   document.body.appendChild(dropdown);
   const r=b.getBoundingClientRect();
   dropdown.style.left=Math.min(r.left+window.scrollX, window.scrollX+window.innerWidth-380)+'px';
