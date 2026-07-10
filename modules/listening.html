@@ -18,6 +18,8 @@ main{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;max-width:1
 .kwGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
 .kwCard{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}
 .kwCard h3{margin:0 0 10px;font-size:17px}
+.kwImageWrap{width:100%;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#f8fafc;margin:0 0 12px}
+.kwImage{display:block;width:100%;height:auto;max-height:360px;object-fit:contain}
 .kwList{display:flex;flex-wrap:wrap;gap:8px}
 .kwBtn{border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:8px 10px;cursor:pointer;font-size:14px;display:inline-flex;gap:6px;align-items:center}
 .kwBtn:hover{background:#eef2ff;border-color:#c7d7fe}
@@ -43,6 +45,7 @@ main{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;max-width:1
   .audioBox{background:#0f172a;border-color:var(--line)}
   .bar{background:#1f2937}.fill{background:#7db7ff}
   .plainBtn:hover,.controls button:hover,.kwBtn:hover{background:#182235}
+  .kwImageWrap{background:#0f172a;border-color:var(--line)}
   .script{border-top-color:var(--line)}.cn,.optionCn,.kwIntro,.kwCn{color:#cbd5e1}
   .srcNote{background:#2a1d0c;border-color:#92400e;color:#fcd9a2}
   .kbd{background:#0f172a;border-color:#344054;color:#d1d5db}
@@ -121,6 +124,10 @@ Troisième personne. Il est évident que cela coûterait trop cher, mais pour ce
 {no:54,group:'old',type:'choice',title:'火车站广播',tag:'公共广播 / 单选',q:'Ce message est diffusé pour…',audio:`Mesdames et Messieurs, le quart à destination de Lausanne prévu à seize heures quatorze va être retardé à cause d'un incident mécanique. Nous allons mettre à votre disposition un nouveau moyen de transport. Veuillez rester attentifs aux annonces. Merci pour votre compréhension.`,cn:`女士们先生们，前往洛桑、原定 16 点 14 分的 Le Quart 将因机械事故而延迟。我们将为您提供一种新的交通工具。请注意公告。感谢您的理解。`,opts:[['A','donner un nouvel horaire','给出新的时间'],['B','modifier une information','修改一条信息'],['C','expliquer une situation','解释一种情况'],['D','annoncer un départ','宣布出发']],ans:'C'}
 ];
 
+const KEYWORD_IMAGES = {
+  '1':'1.png','2':'2.png','3':'3.png','4':'4.png','5':'5.png','6':'6.png','7':'7.png','8':'8.png','9':'9.png',
+  '18':'18.png','20 / 27':'20_27.png','22':'22.png','29':'29.png','44':'44.png'
+};
 const IMAGE_KEYWORDS = [
   {title:'1 周末活动 / 地点', items:[
     ['faire du cheval','骑马'],['faire de la voile en mer','海上帆船'],['faire du parapente','滑翔伞'],['faire du ski','滑雪']
@@ -283,19 +290,27 @@ function speakGroup(i){
   playSession++;
   playCurrent(playSession);
 }
+function keywordImageForGroup(group){
+  const key = (group.title.match(/^\d+(?:\s*\/\s*\d+)?/) || [''])[0].replace(/\s*\/\s*/g,' / ');
+  return KEYWORD_IMAGES[key] || '';
+}
 function showKeywords(){
   stopAudio();
   $('summary').classList.remove('show');
   renderNav();
-  const cards=IMAGE_KEYWORDS.map((g,i)=>`
+  const cards=IMAGE_KEYWORDS.map((g,i)=>{
+    const image = keywordImageForGroup(g);
+    const imageBlock = image ? `<div class="kwImageWrap"><img class="kwImage" src="../assets/listening-images/${image}" alt="${g.title} 图片选项" loading="lazy"></div>` : '';
+    return `
     <div class="kwCard">
       <h3>${g.title}</h3>
+      ${imageBlock}
       <div class="kwList">
         ${g.items.map(k=>`<button class="kwBtn" onclick="speakKeyword('${k[0].replace(/'/g,"\\'")}')"><span>▶</span><span><span class="kwFr">${k[0]}</span><br><span class="kwCn">${k[1]}</span></span></button>`).join('')}
       </div>
       <div class="kwHint"><button class="plainBtn" onclick="speakGroup(${i})">播放本组关键词</button></div>
     </div>
-  `).join('');
+  `}).join('');
   $('quiz').innerHTML=`
     <div class="qhead"><div class="qtitle">图片题关键词训练</div><div class="tag">点击可听发音</div></div>
     <div class="left" style="border-right:0">
