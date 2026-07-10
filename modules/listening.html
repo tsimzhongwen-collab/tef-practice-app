@@ -123,7 +123,7 @@ Troisième personne. Il est évident que cela coûterait trop cher, mais pour ce
 
 const IMAGE_KEYWORDS = [
   {title:'1 周末活动 / 地点', items:[
-    ['la piscine','游泳池'],['nager','游泳'],['faire de la natation','游泳'],['la bibliothèque','图书馆'],['joindre quelqu’un','联系某人'],['éteindre son téléphone','关掉手机']
+    ['faire du cheval','骑马'],['faire de la voile en mer','海上帆船'],['faire du parapente','滑翔伞'],['faire du ski','滑雪']
   ]},
   {title:'2 婴儿用品 / 衣服', items:[
     ['une peluche','毛绒玩具'],['un pyjama','睡衣'],['un mouton','羊'],['le soleil','太阳'],['une poussette','婴儿车'],['une grenouillère','婴儿连体衣']
@@ -135,7 +135,7 @@ const IMAGE_KEYWORDS = [
     ['une maison','房子'],['un grand jardin','大花园'],['un hôtel','酒店'],['une piscine','游泳池'],['une villa','别墅'],['un immeuble','楼房'],['la campagne','乡村']
   ]},
   {title:'5 房间场景 / 搬家装修', items:[
-    ['déménager','搬家'],['un déménagement','搬家'],['les travaux','装修 / 工程'],['un ouvrier','工人'],['une salle de classe','教室'],['prendre le bus','坐公交']
+    ['déménager','搬家'],['un déménagement','搬家'],['les travaux','装修 / 工程'],['un ouvrier','工人'],['une salle de classe','教室'],['prendre le bus','坐公交'],['jouer aux échecs','下棋']
   ]},
   {title:'6 外貌描述', items:[
     ['brune','黑发女性'],['blonde','金发女性'],['les cheveux courts','短发'],['les cheveux longs','长发'],['les cheveux bouclés','卷发'],['les lunettes','眼镜']
@@ -299,7 +299,7 @@ function showKeywords(){
   $('quiz').innerHTML=`
     <div class="qhead"><div class="qtitle">图片题关键词训练</div><div class="tag">点击可听发音</div></div>
     <div class="left" style="border-right:0">
-      <p class="kwIntro">这里提取的是上传的《TEF听力机经(2).pdf》图片题中反复出现、容易决定答案的词。点击单个词可以听法语发音；点击“播放本组关键词”可以连续听一组。中文只用于确认含义，不参与题目作答。</p>
+      <p class="kwIntro">图片题每一题的四张图片，无固定正确选项，所以需要熟悉每一题的每一个选项关键词发音，同样四张图片可能在一次中考察两次，但是听力关键词不同，需要熟记。<br>点击“播放本组关键词”可以连续听一组。</p>
       <div class="kwTools">
         <button class="mainbtn" onclick="speakKeyword('la piscine. un pyjama. un vélo. une maison. déménager. les lunettes. un billet d’avion. un service à thé. un accident. une salle de réunion.')">播放高频总复习</button>
         <button class="plainBtn" onclick="idx=0;render()">回到刷题</button>
